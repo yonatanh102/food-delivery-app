@@ -23,6 +23,7 @@ void DataModel::RemovePurchase(const string& userId, const string& productId){
 }
 
 const unordered_set<string>& DataModel::getViewHistoryOfUser(const string& userId){
+    // Null Object Pattern: returning a static empty set if user is not found.
     static const unordered_set<string> emptySet;
     auto it = viewProductsHistory.find(userId);
     if(it != viewProductsHistory.end()){
@@ -32,6 +33,7 @@ const unordered_set<string>& DataModel::getViewHistoryOfUser(const string& userI
 }
 
 const unordered_set<string>& DataModel::getViewHistoryOfProduct(const string& productId){
+    // Null Object Pattern: returning a static empty set if user is not found.
     static const unordered_set<string> emptySet;
     auto it = viewUsersHistory.find(productId);
     if(it != viewUsersHistory.end()){
@@ -41,6 +43,7 @@ const unordered_set<string>& DataModel::getViewHistoryOfProduct(const string& pr
 }
 
 const unordered_set<string>& DataModel::getPurchaseHistoryOfUser(const string& userId){
+    // Null Object Pattern: returning a static empty set if user is not found.
     static const unordered_set<string> emptySet;
     auto it = purchaseProductsHistory.find(userId);
     if(it != purchaseProductsHistory.end()){
@@ -50,6 +53,7 @@ const unordered_set<string>& DataModel::getPurchaseHistoryOfUser(const string& u
 }
 
 const unordered_set<string>& DataModel::getPurchaseHistoryOfProduct(const string& productId){
+    // Null Object Pattern: returning a static empty set if user is not found.
     static const unordered_set<string> emptySet;
     auto it = purchaseUsersHistory.find(productId);
     if(it != purchaseUsersHistory.end()){

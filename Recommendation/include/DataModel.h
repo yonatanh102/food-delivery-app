@@ -5,26 +5,33 @@
 #include <string>
 #include <unordered_set>
 
-using namespace std;
-
+/**
+ * @class DataModel
+ * @brief Acts as the central in-memory database for the application.
+ * Manages the relationships between users and products for both views and purchases.
+ */
 class DataModel{
     private:
-        unordered_map<string, unordered_set<string>> viewProductsHistory;
-        unordered_map<string, unordered_set<string>> purchaseProductsHistory;
-        unordered_map<string, unordered_set<string>> viewUsersHistory;
-        unordered_map<string, unordered_set<string>> purchaseUsersHistory;
+        std::unordered_map<std::string, std::unordered_set<std::string>> viewProductsHistory;
+        std::unordered_map<std::string, std::unordered_set<std::string>> purchaseProductsHistory;
+        std::unordered_map<std::string, std::unordered_set<std::string>> viewUsersHistory;
+        std::unordered_map<std::string, std::unordered_set<std::string>> purchaseUsersHistory;
 
     public:
-        void AddView(const string& userId, const string& productId);
-        void RemoveView(const string& userId, const string& productId);
-        void AddPurchase(const string& userId, const string& productId);
-        void RemovePurchase(const string& userId, const string& productId);
-        const unordered_set<string>& getViewHistoryOfUser(const string& userId);
-        const unordered_set<string>& getPurchaseHistoryOfUser(const string& userId);
-        const unordered_set<string>& getViewHistoryOfProduct(const string& productId);
-        const unordered_set<string>& getPurchaseHistoryOfProduct(const string& productId);
+        // --- View History Management ---
+        void AddView(const std::string& userId, const std::string& productId);
+        void RemoveView(const std::string& userId, const std::string& productId);
+
+        // --- Purchase History Management ---
+        void AddPurchase(const std::string& userId, const std::string& productId);
+        void RemovePurchase(const std::string& userId, const std::string& productId);
+
+        // --- Getters ---
+        // Note: Returning const references prevents expensive copies of the data in memory.
+        const std::unordered_set<std::string>& getViewHistoryOfUser(const std::string& userId);
+        const std::unordered_set<std::string>& getPurchaseHistoryOfUser(const std::string& userId);
+        const std::unordered_set<std::string>& getViewHistoryOfProduct(const std::string& productId);
+        const std::unordered_set<std::string>& getPurchaseHistoryOfProduct(const std::string& productId);
 };
-
-
 
 #endif
