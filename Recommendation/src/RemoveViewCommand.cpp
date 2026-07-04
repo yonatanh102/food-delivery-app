@@ -8,7 +8,7 @@ string RemoveViewCommand::execute(const vector<string>& args){
     // Remove each specified product from the user's history
     string user = args.front(); // First argument is the user ID
     for (size_t i = 1; i < args.size(); ++i){
-        m_model->RemovePurchase(user, args[i]);
+        m_model->RemoveView(user, args[i]);
     }
     return("200 OK\n");
 }
