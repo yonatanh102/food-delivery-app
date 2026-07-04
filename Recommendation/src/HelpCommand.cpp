@@ -2,7 +2,6 @@
 #include <ostream>
 
 using namespace std;
-HelpCommand::HelpCommand() {}
 string HelpCommand::execute(const vector<string>& args){
 
     string helpMenu = "200 Ok\n";

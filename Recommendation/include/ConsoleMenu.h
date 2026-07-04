@@ -5,7 +5,7 @@
 
 // ConsoleMenu implementation of IMenu interface.
 // This class handles reading input strings from the terminal.
-class ConsoleMenu : IMenu{
+class ConsoleMenu : public IMenu{
     public:
         /**
         * Reads a full line of text from the console.
