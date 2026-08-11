@@ -2,7 +2,7 @@
 #define REMOVEPURCHASECOMMAND_H
 
 #include "ICommand.h"
-#include "DataModel.h"
+#include "IDataRepository.h"
 
 /**
  * @class RemovePurchaseCommand
@@ -10,9 +10,9 @@
  */
 class RemovePurchaseCommand: public ICommand{
     private:
-        DataModel* m_model;
+        IDataRepository* m_model;
     public:
-        RemovePurchaseCommand(DataModel* model) : m_model(model) {}
+        RemovePurchaseCommand(IDataRepository* model) : m_model(model) {}
         string execute(const vector<string>& args);
 };
 

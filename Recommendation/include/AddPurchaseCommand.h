@@ -2,7 +2,7 @@
 #define ADDPURCHASECOMMAND_H
 
 #include "ICommand.h"
-#include "DataModel.h"
+#include "IDataRepository.h"
 
 /**
  * @class AddPurchaseCommand
@@ -11,13 +11,13 @@
  */
 class AddPurchaseCommand : public ICommand{
     private:
-        DataModel* m_model; // Dependency Injection: Pointer to the central database
+        IDataRepository* m_model; // Dependency Injection: Pointer to the central database
     public:
         /**
         * @brief Constructor injects the DataModel dependency.
         * @param model Pointer to the active DataModel instance.
         */
-        AddPurchaseCommand(DataModel* model) : m_model(model) {}
+        AddPurchaseCommand(IDataRepository* model) : m_model(model) {}
 
         /**
         * @brief Executes the command.

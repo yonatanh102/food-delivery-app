@@ -2,7 +2,7 @@
 #define REMOVEVIEWCOMMAND_H
 
 #include "ICommand.h"
-#include "DataModel.h"
+#include "IDataRepository.h"
 
 /**
  * @class RemoveViewCommand
@@ -10,9 +10,9 @@
  */
 class RemoveViewCommand: public ICommand{
     private:
-        DataModel* m_model;
+        IDataRepository* m_model;
     public:
-        RemoveViewCommand(DataModel* model) : m_model(model) {}
+        RemoveViewCommand(IDataRepository* model) : m_model(model) {}
         string execute(const vector<string>& args);
 };
 

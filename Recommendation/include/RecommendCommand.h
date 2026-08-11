@@ -2,7 +2,7 @@
 #define RECOMMENDCOMMAND_H
 
 #include "ICommand.h"
-#include "DataModel.h"
+#include "IDataRepository.h"
 #include <queue>
 #include <string>
 #include <vector>
@@ -17,7 +17,7 @@
  */
 class RecommendCommand : public ICommand{
     private:
-        DataModel* m_model; ///< Pointer to the central database model.
+        IDataRepository* m_model; ///< Pointer to the central database model.
 
         /**
         * @brief Calculates the weighted similarity score between two users.
@@ -45,7 +45,7 @@ class RecommendCommand : public ICommand{
         /**
         * @brief Constructor injects the DataModel dependency.
         */
-        RecommendCommand(DataModel* model) : m_model(model) {}
+        RecommendCommand(IDataRepository* model) : m_model(model) {}
 
         /**
         * @brief Executes the recommendation algorithm.

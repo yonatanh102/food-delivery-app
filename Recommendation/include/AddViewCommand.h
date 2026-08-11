@@ -2,7 +2,7 @@
 #define ADDVIEWCOMMAND_H
 
 #include "ICommand.h"
-#include "DataModel.h"
+#include "IDataRepository.h"
 
 /**
  * @class AddViewCommand
@@ -11,13 +11,13 @@
  */
 class AddViewCommand : public ICommand{
     private:
-        DataModel* m_model; // Dependency Injection: Pointer to the central database
+        IDataRepository* m_model; // Dependency Injection: Pointer to the central database
     public:
         /**
         * @brief Constructor injects the DataModel dependency.
         * @param model Pointer to the active DataModel instance.
         */
-        AddViewCommand(DataModel* model) : m_model(model) {}
+        AddViewCommand(IDataRepository* model) : m_model(model) {}
 
         /**
         * @brief Executes the command.
