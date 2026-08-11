@@ -17,12 +17,12 @@
  */
 class RecommendCommand : public ICommand{
     private:
-        IDataRepository* m_model; ///< Pointer to the central database model.
+        IDataRepository* m_model; // Pointer to the central database model.
 
         /**
         * @brief Calculates the weighted similarity score between two users.
         * @param user1 The target user ID.
-         * @param user2 The user ID to compare against.
+        * @param user2 The user ID to compare against.
         * @return A double representing the similarity score (0.0 to 1.0).
         */
         double calculateUserSimilarity(const std::string& user1, const std::string& user2);
@@ -39,7 +39,7 @@ class RecommendCommand : public ICommand{
         * @param user1 The target user ID.
         * @param topUsers A priority queue (Max-Heap) of users sorted by similarity score.
         * @return A formatted response string containing the recommended product IDs.
-        */    
+        */
         std::string RecommendedProducts(const std::string& user1, std::priority_queue<std::pair<double, std::string>>& topUsers);
     public:
         /**

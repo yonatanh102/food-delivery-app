@@ -22,7 +22,7 @@ class AddPurchaseCommand : public ICommand{
         /**
         * @brief Executes the command.
         * @param args A vector where args[0] is the userId, and the rest are productIds.
-        * @return Status string (e.g., "200 OK").
+        * @return Status string (e.g., "201 Created").
         */
         string execute(const vector<string>& args) override;
 };

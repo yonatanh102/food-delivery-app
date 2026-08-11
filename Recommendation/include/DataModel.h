@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 /**
- * @class DataModel
+ * @class DataModel implementation of IDataRepository interface.
  * @brief Acts as the central in-memory database for the application.
  * Manages the relationships between users and products for both views and purchases.
  */
