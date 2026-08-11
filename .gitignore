@@ -1,0 +1,5 @@
+# Database files
+data/data.txt
+
+# VS Code specific files
+.vscode/

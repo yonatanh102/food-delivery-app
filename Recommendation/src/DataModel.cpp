@@ -1,5 +1,8 @@
 #include "DataModel.h"
 
+#include <fstream>
+#include <sstream>
+
 using namespace std;
 
 void DataModel::AddView(const string& userId, const string& productId){
@@ -60,4 +63,71 @@ const unordered_set<string>& DataModel::getPurchaseHistoryOfProduct(const string
         return it->second;
     }
     return emptySet;
+}
+
+void DataModel::saveToFile(const string& filename) const{
+    ofstream file(filename);
+    if (!file.is_open()) {
+        return;
+    }
+
+    file << "[VIEWS]\n";
+    for (const auto& pair : viewProductsHistory){
+        if (pair.second.empty()) continue;
+        
+        file << pair.first; // user's id
+        for (const string& product : pair.second){
+            file << " " << product;
+        }
+        file << "\n";
+    }
+
+    file << "[PURCHASES]\n";
+    for (const auto& pair : purchaseProductsHistory){
+        if (pair.second.empty()) continue;
+
+        file << pair.first; // user's id
+        for (const string& product : pair.second){
+            file << " " << product;
+        }
+        file << "\n";
+    }
+
+    file.close();
+}
+
+void DataModel::loadFromFile(const std::string& filename){
+    ifstream file(filename);
+    if (!file.is_open()){
+        return;
+    }
+
+    string line;
+    string currentSection = "";
+
+    while (getline(file, line)){
+        if(line.empty()) continue;
+
+        if (line == "[VIEWS]"){
+            currentSection = "VIEWS";
+            continue;
+        } else if (line == "[PURCHASES]"){
+            currentSection = "PURCHASES";
+            continue;
+        }
+
+        stringstream ss(line);
+        string userId;
+        ss >> userId;
+        string product;
+        
+        while (ss >> product) {
+            if (currentSection == "VIEWS"){
+                AddView(userId, product);
+            } else if (currentSection == "PURCHASES") {
+                AddPurchase(userId, product);
+            }
+        }
+    }
+    file.close();
 }

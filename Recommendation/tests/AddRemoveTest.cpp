@@ -12,9 +12,8 @@ TEST(AddCommandTest, ValidMultipleViewsAdded) {
     AddViewCommand cmd(&model);
     string result = cmd.execute({"user1", "prod1", "prod2"});
     
-    // Check if the command returns a success message
-    EXPECT_TRUE(result.find("200 OK") != string::npos);
-    // Verify the data was actually saved in the DataModel
+    // Check if the command returns a 201 Created status
+    EXPECT_TRUE(result.find("201 Created") != string::npos);
     EXPECT_EQ(model.getViewHistoryOfUser("user1").size(), 2);
 }
 
@@ -24,7 +23,7 @@ TEST(AddCommandTest, ValidPurchaseAdded) {
     AddPurchaseCommand cmd(&model);
     string result = cmd.execute({"user1", "milk"});
     
-    EXPECT_TRUE(result.find("200 OK") != string::npos);
+    EXPECT_TRUE(result.find("201 Created") != string::npos);
     EXPECT_EQ(model.getPurchaseHistoryOfUser("user1").size(), 1);
 }
 
@@ -47,19 +46,33 @@ TEST(RemoveCommandTest, RemoveExistingPurchase) {
     RemovePurchaseCommand cmd(&model);
     string result = cmd.execute({"user1", "milk"});
     
-    EXPECT_TRUE(result.find("200 OK") != string::npos);
-    // Verify the list is now empty
+    // Check for 204 No Content on successful deletion[cite: 4]
+    EXPECT_TRUE(result.find("204 No Content") != string::npos);
     EXPECT_TRUE(model.getPurchaseHistoryOfUser("user1").empty());
 }
 
-// 5. Edge case: Removing a non-existing product should not crash the system
-TEST(RemoveCommandTest, RemoveNonExistingProductDoesNotCrash) {
+// 5. Edge case: Removing a non-existing product should return 404
+TEST(RemoveCommandTest, RemoveNonExistingProductReturns404) {
     DataModel model;
     RemoveViewCommand cmd(&model);
     
-    // Attempting to remove from a ghost user and a ghost product
     string result = cmd.execute({"ghost_user", "ghost_product"});
     
-    // The system should handle this gracefully without crashing
-    EXPECT_TRUE(result.find("200 OK") != string::npos);
+    // The system should return 404 Not Found[cite: 4]
+    EXPECT_TRUE(result.find("404 Not Found") != string::npos);
+}
+
+// 6. Edge case: Atomicity - partial failure aborts the whole operation
+TEST(RemoveCommandTest, AtomicRemovalPreventsPartialDeletion) {
+    DataModel model;
+    model.AddPurchase("user1", "milk");
+    model.AddPurchase("user1", "bread");
+    
+    RemovePurchaseCommand cmd(&model);
+    // Requesting to remove "milk" (exists) and "ghost_product" (doesn't exist)
+    string result = cmd.execute({"user1", "milk", "ghost_product"});
+    
+    EXPECT_TRUE(result.find("404 Not Found") != string::npos);
+    // Verify that "milk" was NOT deleted because the operation was aborted
+    EXPECT_EQ(model.getPurchaseHistoryOfUser("user1").size(), 2);
 }

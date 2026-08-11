@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
     // 1. Initialize core system components on the stack (automatic memory management)
     DataModel model;
     ConsoleMenu menu;
+    model.loadFromFile("data/data.txt");
 
     // 2. Command Registration (Command Pattern implementation)
     map<string, ICommand*> commands;
@@ -42,7 +43,10 @@ int main(int argc, char* argv[]){
 
     myApp.run();
 
-    // 4. Graceful Shutdown & Memory Cleanup
+    // 4. saving all data to the data file
+    model.saveToFile("data/data.txt");
+
+    // 5. Graceful Shutdown & Memory Cleanup
     for (auto& pair : commands) {
         delete pair.second;
     }

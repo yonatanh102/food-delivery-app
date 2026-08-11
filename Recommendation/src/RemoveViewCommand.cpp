@@ -19,7 +19,7 @@ string RemoveViewCommand::execute(const vector<string>& args){
     }
     // removing each product from the users history
     for (size_t i = 1; i < args.size(); ++i){
-        m_model->RemovePurchase(user, args[i]);
+        m_model->RemoveView(user, args[i]);
     }
     return("204 No Content\n");
 }
