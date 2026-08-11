@@ -10,5 +10,5 @@ string AddViewCommand::execute(const vector<string>& args){
     for(size_t i = 1; i < args.size(); ++i) {
         m_model->AddView(user, args[i]);
     }
-    return("200 OK\n");
+    return("201 Created\n");
 }
