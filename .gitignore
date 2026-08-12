@@ -3,3 +3,7 @@ data/data.txt
 
 # VS Code specific files
 .vscode/
+
+# Python cache files
+__pycache__/
+*.pyc

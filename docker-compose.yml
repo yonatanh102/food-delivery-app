@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Container for the recommendation server
+  recommendation-server:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    # 
+    command: ["./recommend_app", "5000"]
+    ports:
+      - "5000:5000"
+
+  # Container for running Python tests
+  python-tests:
+    image: python:3.10-slim
+    # We depend on the recommendation server - tests won't run until the server is up
+    depends_on:
+      - recommendation-server
+    # Map the current directory to the container's app directory
+    volumes:
+      - .:/app
+    working_dir: /app/Recommendation/tests
+    # run the tests using unittest
+    command: ["python", "-m", "unittest", "test_tcp_client.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVER_IP=recommendation-server
