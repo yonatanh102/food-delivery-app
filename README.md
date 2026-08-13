@@ -13,7 +13,34 @@ A high-performance TCP-based recommendation engine built in C++. The system mana
   * Python Automated Integration Tests (E2E TCP socket validation).
 * **Deployment:** Fully containerized utilizing Docker Multi-stage builds and Docker Compose.
 
------------------------------
+---
+
+## Recommendation Algorithm
+The recommendation engine utilizes a memory-based **Collaborative Filtering** approach, focusing on item co-occurrence and user behavior similarity. 
+
+When a `RECOMMEND` request is triggered for a specific user and a target item:
+1. **Audience Matching:** The system scans the database to find all other users who have interacted with the requested target item.
+2. **Item Extraction:** It aggregates all other items that these matched users have viewed or purchased.
+3. **Filtering:** Items that the requesting user has already interacted with are filtered out to ensure only new, relevant suggestions are provided.
+4. **Result:** The system returns the optimal recommended products based on this intersection of behaviors.
+
+---
+
+## Supported Commands
+The server processes text-based commands over TCP. Every command sent by the client must end with a newline character (`\n`). All data modifications are strictly atomic (all-or-nothing).
+
+| Command | Arguments | Description | Success Status |
+|---|---|---|---|
+| **`HELP`** | None | Returns a list of all available commands and their syntax. | `200 OK` |
+| **`ADD_VIEW`** | `<user_id> <item_id> [item_id...]` | Records one or more viewed items for a specific user. | `201 Created` |
+| **`ADD_PURCHASE`** | `<user_id> <item_id> [item_id...]` | Records one or more purchased items for a specific user. | `201 Created` |
+| **`REMOVE_VIEW`** | `<user_id> <item_id> [item_id...]` | Atomically removes view records. Reverted if any item does not exist. | `204 No Content` |
+| **`REMOVE_PURCHASE`** | `<user_id> <item_id> [item_id...]` | Atomically removes purchase records. Reverted if any item does not exist. | `204 No Content` |
+| **`RECOMMEND`** | `<user_id> <item_id>` | Generates a list of recommended products based on the target item. | `200 OK` |
+
+*(Note: Invalid commands, missing arguments, or failed atomic operations will return a `400 Bad Request` or `404 Not Found` status).*
+
+---
 
 ## Build & Run Instructions
 

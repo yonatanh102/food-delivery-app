@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir =ltr>
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendations system</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; margin: 5px 0; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #218838; }
+        .recommend-btn { background-color: #007bff; }
+        .recommend-btn:hover { background-color: #0069d9; }
+        pre { background: #e9ecef; padding: 15px; border-radius: 4px; text-align: left; direction: ltr; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Checking Recommendations</h2>
+        <input type="text" id="userId" placeholder="Enter user ID (e.g., user1)">
+        <input type="text" id="items" placeholder="Enter items separated by spaces (e.g., apple bread)">
+        
+        <button onclick="sendAction('view')">Add(View)</button>
+        <button onclick="sendAction('purchase')">Add(Purchase)</button>
+        <button class="recommend-btn" onclick="getRecommendation()">Get Recommendations</button>
+
+        <h3>Server Response:</h3>
+        <pre id="result">Waiting for action...</pre>
+    </div>
+
+    <script>
+        async function sendAction(actionType) {
+            const userId = document.getElementById('userId').value;
+            const items = document.getElementById('items').value.split(' ').filter(i => i !== "");
+            
+            if (!userId || items.length === 0) {
+                alert('must provide both user ID and items');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/interactions/${actionType}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, items })
+                });
+                
+                const data = await res.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('result').innerText = 'error communicating with server';
+            }
+        }
+
+        async function getRecommendation() {
+            const userId = document.getElementById('userId').value;
+            const itemid = document.getElementById('items').value.split(' ')[0];
+            
+            if (!userId || !itemid) {
+                alert('must provide both user ID and at least one item for recommendation');
+                return;
+            }
+
+            try {
+                
+                const res = await fetch(`/recommendations?userId=${userId}&itemid=${itemid}`);
+                const data = await res.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('result').innerText = 'שגיאת תקשורת עם השרת';
+            }
+        }
+    </script>
+</body>
+</html>
