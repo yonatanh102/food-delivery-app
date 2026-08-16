@@ -5,6 +5,7 @@ const recommendationRoutes = require('./routes/recommendations');
 const interactionRoutes = require('./routes/interactions');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
+const restaurantsRoutes = require('./routes/restaurants');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/recommendations', recommendationRoutes);
 app.use('/interactions', interactionRoutes);
+app.use('/restaurants', restaurantsRoutes);
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/food_delivery_db';
 
