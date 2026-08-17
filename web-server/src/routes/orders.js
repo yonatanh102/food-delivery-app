@@ -1,6 +1,10 @@
 const express = require ('express');
 const router = express.Router();
 const orderController = require('../controllers/orders');
+const verifyToken = require('../middleware/auth');
+
+// all route are private
+router.use(verifyToken);
 
 router.get('/', orderController.getOrders);
 router.get('/:id', orderController.getOrderById);
