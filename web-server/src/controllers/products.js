@@ -1,4 +1,5 @@
 const productService = require('../services/products');
+const tcpClient = require('../tcpClient');
 
 const getProducts = async (req, res) => {
     try {
@@ -9,13 +10,21 @@ const getProducts = async (req, res) => {
     }
 };
 
+// reciving the product id and sending a view for the product in the cpp server
 const getProductById = async (req, res) => {
     try {
         const { id } = req.params;
+        const { userId } = req.query;
         const product = await productService.getProductById(id);
 
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });
+        }
+        if (userId) {
+            const cmd = `ADD_VIEW ${userId} ${id}`;
+            tcpClient.sendCommand(cmd).catch(err => {
+                console.error('[TCP Error] Failed to report view:', err.message);
+            });
         }
         res.status(200).json(product);
     } catch (error) {

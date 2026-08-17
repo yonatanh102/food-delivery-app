@@ -1,4 +1,5 @@
 const orderService = require('../services/orders');
+const tcpClient = require('../tcpClient');
 
 const getOrders = async (req, res) => {
     try {
@@ -23,9 +24,18 @@ const getOrderById = async (req, res) => {
     }
 };
 
+// creating new order and sending purchased items to the cpp server
 const createOrder = async (req, res) => {
     try {
         const order = await orderService.createOrder(req.body);
+        const products = order.products.map(p => p.productId);
+        
+        if (products.length > 0) {
+            const cmd = `ADD_PURCHASE ${order.userId} ${products.join(' ')}`;
+            tcpClient.sendCommand(cmd).catch(err => {
+                console.error('[TCP Error] Failed to report purchase:', err.message);
+            });
+        }
         res.status(201).json(order);
     } catch (error) {
         res.status(500).json({ error: 'Internal server error', message: error.message });
