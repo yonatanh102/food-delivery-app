@@ -13,6 +13,10 @@ const getUserByEmail = async (email) => {
     return await userModel.findOne({ email });
 }
 
+const getUserByPhone = async (phone) => {
+    return await userModel.findOne({ phone });
+}
+
 // creating user and hiding thier password
 const createUser = async (userData) => {
     const salt = await bcrypt.genSalt(10);
@@ -34,6 +38,7 @@ module.exports = {
     getUsers,
     getUserById,
     getUserByEmail,
+    getUserByPhone,
     createUser,
     updateUser,
     deleteUser

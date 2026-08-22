@@ -23,6 +23,21 @@ const getRestaurantById = async (req, res) => {
     }
 };
 
+const searchRestaurants = async (req, res) => {
+    try {
+        const searchQuery = req.query.q;
+
+        if (!searchQuery) {
+            return res.status(400).json({ error: 'Search query is missing' });
+        }
+
+        const restaurants = await restaurantService.find({ name: { $regex: searchQuery, $options: 'i'}});
+        res.status(200).json(restaurants);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error', message: error.message });
+    }
+};
+
 const createRestaurant = async (req, res) => {
     try {
         const restaurant = await restaurantService.createRestaurant(req.body);
@@ -63,6 +78,7 @@ const deleteRestaurant = async (req, res) => {
 module.exports = {
     getRestaurants,
     getRestaurantById,
+    searchRestaurants,
     createRestaurant,
     updateRestaurant,
     deleteRestaurant

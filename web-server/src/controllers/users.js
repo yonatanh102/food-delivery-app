@@ -1,3 +1,4 @@
+const { watch } = require('../models/restaurants');
 const userService = require('../services/users');
 
 const getUsers = async (req, res) => {
@@ -25,6 +26,17 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
+        const { email, phone } = req.body;
+        const existingEmail = await userService.getUserByEmail(email);
+        const existingPhone = await userService.getUserByPhone(phone);
+
+        if (!existingEmail) {
+            return res.status(409).json({ error: 'Email already in use' });
+        }
+        if (!existingPhone) {
+            return res.status(409).json({ error: 'Phone already in use' });
+        }
+        
         const user = await userService.createUser(req.body);
         res.status(201).json(user);
     } catch (error) {

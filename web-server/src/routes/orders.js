@@ -1,6 +1,7 @@
 const express = require ('express');
 const router = express.Router();
 const orderController = require('../controllers/orders');
+
 const verifyToken = require('../middleware/auth');
 
 // all route are private
