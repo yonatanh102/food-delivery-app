@@ -26,14 +26,18 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
+        if (req.body.password && req.body.password.length < 6) {
+            return res.status(500).json({ message: 'password must be at least 6 characters' });
+        }
+        
         const { email, phone } = req.body;
         const existingEmail = await userService.getUserByEmail(email);
         const existingPhone = await userService.getUserByPhone(phone);
 
-        if (!existingEmail) {
+        if (existingEmail) {
             return res.status(409).json({ error: 'Email already in use' });
         }
-        if (!existingPhone) {
+        if (existingPhone) {
             return res.status(409).json({ error: 'Phone already in use' });
         }
         

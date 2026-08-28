@@ -7,6 +7,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'my_super_secret_key_12345';
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(401).json({ error: 'Missing email or password' });
+        }
+        
         const user = await userService.getUserByEmail(email);
 
         if (!user) {
@@ -14,11 +18,11 @@ const login = async (req, res) => {
         }
         const isMatch = await bcrpyt.compare(password, user.password);
         if (!isMatch) {
-            res.status(401).json({ error: 'Invalid password' });
+            return res.status(401).json({ error: 'Invalid password' });
         }
 
         const token = jwt.sign(
-            { userId = user._id, role: user.role },
+            { userId: user._id, role: user.role },
             JWT_SECRET,
             { expiresIn: '1h'}
         );
@@ -29,4 +33,4 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = login;
+module.exports = { login };

@@ -14,7 +14,7 @@ const createRestaurant = async (restaurantData) => {
 }
 
 const updateRestaurant = async (id, restaurantData) => {
-    return await restaurantModel.findByIdAndUpdate(id, restaurantData, { new: true });
+    return await restaurantModel.findByIdAndUpdate(id, restaurantData, { returnDocument: 'after', runValidators: true });
 }
 
 const deleteRestaurant = async (id) => {

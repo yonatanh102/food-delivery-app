@@ -32,9 +32,11 @@ const createOrder = async (req, res) => {
     try {
         const authUserId = req.user.userId;
         const { restaurantId, products } = req.body;
+        if (!restaurantId) {
+            return res.status(500).json({ error: 'restaurantId is required' });
+        }
 
-        const restaurant = await restaurantService.getRestaurandById(restaurantId);
-        
+        const restaurant = await restaurantService.getRestaurantById(restaurantId);
         if (!restaurant) {
             return res.status(404).json({ error: 'Restaurant not found' });
         }
@@ -54,11 +56,11 @@ const createOrder = async (req, res) => {
             restaurantName: restaurant.name,
             userId: authUserId
         };
-        const order = await orderService.createOrder(req.body);
-        const products = order.products.map(p => p.productId);
+        const order = await orderService.createOrder(orderData);
+        const productIds = order.products.map(p => p.productId);
 
-        if (products.length > 0) {
-            const cmd = `ADD_PURCHASE ${order.userId} ${products.join(' ')}`;
+        if (productIds.length > 0) {
+            const cmd = `ADD_PURCHASE ${order.userId} ${productIds.join(' ')}`;
             tcpClient.sendCommand(cmd).catch(err => {
                 console.error('[TCP Error] Failed to report purchase:', err.message);
             });
@@ -73,14 +75,17 @@ const updateOrder = async (req, res) => {
     try {
         const { id } = req.params;
         const authUserId = req.user.userId;
-        const order = await orderService.updateOrder(id, req.body);
 
-        if (!order) {
+        const existingOrder = await orderService.getOrderById(id);
+        if (!existingOrder) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        if (order.userId !== authUserId) {
+        if (existingOrder.userId !== authUserId) {
             return res.status(403).json({ error: 'Access denied. You can only update your own orders.' });
         }
+        delete req.body.userId;
+
+        const order = await orderService.updateOrder(id, req.body);
         res.status(200).json(order);
     } catch (error) {
         res.status(500).json({ error: 'Internal server error', message: error.message });
@@ -91,14 +96,16 @@ const deleteOrder = async (req, res) => {
     try {
         const { id } = req.params;
         const authUserId = req.user.userId;
-        const order = await orderService.deleteOrder(id);
 
-        if (!order) {
+        const existingOrder = await orderService.getOrderById(id);
+        if (!existingOrder) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        if (order.userId !== authUserId) {
+        if (existingOrder.userId !== authUserId) {
             return res.status(403).json({ error: 'Access denied. You can only delete your own orders.' });
         }
+        
+        const order = await orderService.deleteOrder(id);
         res.status(200).json(order);
     } catch (error) {
         res.status(500).json({ error: 'Internal server error', message: error.message });

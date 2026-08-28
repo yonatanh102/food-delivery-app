@@ -1,5 +1,5 @@
 const userModel = require('../models/users');
-const bceypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const getUsers = async () => {
     return await userModel.find();
@@ -27,7 +27,7 @@ const createUser = async (userData) => {
 }
 
 const updateUser = async (id, userData) => {
-    return await userModel.findByIdAndUpdate(id, userData, { new: true });
+    return await userModel.findByIdAndUpdate(id, userData, { returnDocument: 'after', runValidators: true });
 }
 
 const deleteUser = async (id) => {

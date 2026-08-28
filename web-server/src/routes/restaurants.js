@@ -7,8 +7,8 @@ const verifyAdmin = require('../middleware/admin');
 
 // public routes
 router.get('/', restaurantController.getRestaurants);
-router.get('/:id', restaurantController.getRestaurantById);
 router.get('/search', restaurantController.searchRestaurants);
+router.get('/:id', restaurantController.getRestaurantById);
 
 // private routes
 router.post('/', verifyToken, verifyAdmin, restaurantController.createRestaurant);
