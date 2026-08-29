@@ -6,7 +6,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    # 
+    container_name: recommendation_engine
     command: ["./recommend_app", "5000"]
     ports:
       - "5000:5000"
@@ -26,3 +26,30 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - SERVER_IP=recommendation-server
+  
+  # Container for DB
+  mongodb:
+    image: mongo:latest
+    container_name: food_db
+    ports:
+      - "27017:27017" 
+    volumes:
+      - mongo_data:/data/db 
+  
+  # Container for the api server
+  api:
+    build: ./web-server
+    container_name: node_api
+    ports:
+      - "3000:3000" 
+    depends_on:
+      - mongodb
+      - recommendation-server
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/food_delivery_db
+      - TCP_HOST=recommendation-server
+      - TCP_PORT=5000
+      - JWT_SECRET=my_super_secret_key_12345
+
+volumes:
+  mongo_data:
