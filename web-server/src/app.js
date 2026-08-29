@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const recommendationRoutes = require('./routes/recommendations');
 const interactionRoutes = require('./routes/interactions');
@@ -10,6 +11,7 @@ const ordersRoutes = require('./routes/orders');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
