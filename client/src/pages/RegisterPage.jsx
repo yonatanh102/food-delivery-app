@@ -8,7 +8,7 @@ export default function RegisterPage() {
         name: '', email: '', password: '', address: '', phone: '', location: { lat: null, lng: null }
     });
     const [error, setError] = useState('');
-    const [isLoadingLocation, setIsLoadingLocation] = useState('false');
+    const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                     <div className="flex gap-2">
                         <input 
                             type="text" 
-                            name="Adrees" 
+                            name="adrees" 
                             placeholder="Delivery Address"
                             value={formData.address}
                             onChange={handleChange} 
