@@ -8,7 +8,8 @@ const restaurantSchema = new mongoose.Schema({
   },
   description: { type: String },
   type: { type: String },
-  image: { type: String },
+  logo: { type: String },
+  banner: { type: String }
 });
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

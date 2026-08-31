@@ -1,0 +1,144 @@
+.restaurant-page-wrapper {
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+.restaurant-header {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 3rem 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.restaurant-header-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.restaurant-header-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.restaurant-title { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+.restaurant-info { color: #dbeafe; max-width: 42rem; margin: 0 auto; }
+.restaurant-address { color: #d1d5db; font-size: 0.875rem; margin-top: 0.5rem; }
+
+.menu-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.menu-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.product-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-thumbnail {
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--bg-main);
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.product-thumb-img { width: 100%; height: 100%; object-fit: cover; }
+
+.product-details { flex: 1; }
+.product-name { font-size: 1.125rem; font-weight: 700; margin: 0; }
+.product-desc { color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem; }
+.product-price { color: var(--primary-color); font-weight: 700; margin-top: 0.25rem; }
+
+.product-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.calories-badge {
+  font-size: 0.75rem;
+  background-color: #ffedd5;
+  color: #c2410c;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+[data-theme="dark"] .calories-badge { background-color: #7c2d12; color: #ffedd5; }
+
+.badge-limited {
+  background-color: #dc2626;
+  color: #ffffff;
+  font-size: 10px;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 0.25rem;
+  animation: pulse 2s infinite;
+}
+
+.btn-add {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+}
+
+.modal-overlay {
+  position: fixed; inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 50; padding: 1rem;
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  max-width: 24rem;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+.modal-close { position: absolute; top: 0.75rem; right: 1rem; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: var(--text-muted); }
+.modal-image { margin: 1.5rem 0; display: flex; justify-content: center; font-size: 4rem; }
+.modal-image-full { width: 16rem; height: 16rem; object-fit: cover; border-radius: 0.5rem; }

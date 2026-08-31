@@ -2,16 +2,15 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import api from "../services/api";
+import './Auth.css';
 
-export default function() {
+export default function LoginPage() {
     const navigate = useNavigate();
     const { login } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: ''});
     const [error, setError] = useState('');
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,27 +30,12 @@ export default function() {
             <div className="form-card">
                 <h2 className="form-title">Login</h2>
                 {error && <div className="error-message">{error}</div>}
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="Email" 
-                        onChange={handleChange} 
-                        required 
-                        className="input-field" />
-                    <input 
-                        type="password" 
-                        name="password" 
-                        placeholder="Password" 
-                        onChange={handleChange} 
-                        required 
-                        className="input-field" />
-
+                <form onSubmit={handleSubmit} className="form-group">
+                    <input type="email" name="email" placeholder="Email" onChange={handleChange} required className="input-field" />
+                    <input type="password" name="password" placeholder="Password" onChange={handleChange} required className="input-field" />
                     <button type="submit" className="btn-primary">Login</button>
                 </form>
-
-                <p className="mt-4 text-center text-sm text-gray-600">
+                <p className="form-footer">
                     Don't have an account? <Link to="/register" className="link-text">Register here</Link>
                 </p>
             </div>
