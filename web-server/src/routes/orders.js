@@ -11,7 +11,7 @@ router.use(verifyToken);
 
 // admin routes
 router.get('/all', verifyAdmin, orderController.getAllOrders);
-router.patch('/:id/status', verifyAdmin, orderController.updateOrderStatus);
+router.put('/:id/status', verifyAdmin, orderController.updateOrderStatus);
 
 // user routes
 router.get('/', orderController.getOrders);

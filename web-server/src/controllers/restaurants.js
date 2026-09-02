@@ -31,7 +31,7 @@ const searchRestaurants = async (req, res) => {
             return res.status(400).json({ error: 'Search query is missing' });
         }
 
-        const restaurants = await restaurantService.find({ name: { $regex: searchQuery, $options: 'i'}});
+        const restaurants = await restaurantService.searchRestaurants(searchQuery);
         res.status(200).json(restaurants);
     } catch (error) {
         res.status(500).json({ error: 'Internal server error', message: error.message });

@@ -21,10 +21,16 @@ const deleteRestaurant = async (id) => {
     return await restaurantModel.findByIdAndDelete(id);
 }
 
+const searchRestaurants = async (query) => {
+    const restaurants = await restaurantModel.find({ name: { $regex: query, $options: 'i'}});
+    return restaurants;
+}
+
 module.exports = {
     getRestaurants,
     getRestaurantById,
     createRestaurant,
     updateRestaurant,
-    deleteRestaurant
+    deleteRestaurant,
+    searchRestaurants
 }

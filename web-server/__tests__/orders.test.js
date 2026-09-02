@@ -33,10 +33,10 @@ beforeAll(async () => {
     await mongoose.connect(testMongoUri);
 
     // SETUP: Create prerequisites (Restaurants and Products) using the API as Admin
-    const resRest1 = await request(app).post('/restaurants').set('Authorization', `Bearer ${adminToken}`).send({ name: "Burger Place", location: { lat: 1, lng: 1 } });
+    const resRest1 = await request(app).post('/restaurants').set('Authorization', `Bearer ${adminToken}`).send({ name: "Burger Place", location: { lat: 1, lng: 1 }, address: "123 Main St" });
     validRestaurantId1 = resRest1.body._id;
 
-    const resRest2 = await request(app).post('/restaurants').set('Authorization', `Bearer ${adminToken}`).send({ name: "Pizza Place", location: { lat: 2, lng: 2 } });
+    const resRest2 = await request(app).post('/restaurants').set('Authorization', `Bearer ${adminToken}`).send({ name: "Pizza Place", location: { lat: 2, lng: 2 }, address: "456 Side St" });
     validRestaurantId2 = resRest2.body._id;
 
     const resProd1 = await request(app).post('/products').set('Authorization', `Bearer ${adminToken}`).send({ restaurantId: validRestaurantId1, name: "Burger", description: "Yum", price: 10 });
@@ -57,7 +57,7 @@ afterAll(async () => {
 describe('Orders API Tests', () => {
 
     // ==========================================
-    // 1. CREATE (POST /orders) - 8 Tests
+    // 1. CREATE (POST /orders) - 9 Tests
     // ==========================================
     describe('POST /orders', () => {
         it('1. [Success] Client A creates a valid order', async () => {
@@ -153,6 +153,23 @@ describe('Orders API Tests', () => {
             expect(res.body.userId).toBe(clientAId); 
             expect(res.body.userId).not.toBe("hacker_fake_id_123"); 
         });
+
+        it('9. [Success] Order succeeds even if TCP server is down (Fire & Forget)', async () => {
+            const tcpClient = require('../src/tcpClient');
+            tcpClient.sendCommand.mockRejectedValueOnce(new Error('TCP Server Offline'));
+
+            const validOrder = {
+                restaurantId: validRestaurantId1,
+                products: [{ productId: validProductId1, productName: "Burger", quantity: 1 }]
+            };
+
+            const res = await request(app).post('/orders')
+                .set('Authorization', `Bearer ${clientAToken}`)
+                .send(validOrder);
+
+            expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('_id');
+        });
     });
 
     // ==========================================
@@ -187,7 +204,7 @@ describe('Orders API Tests', () => {
         it('5. [Success] Default status is applied correctly', async () => {
             const res = await request(app).get('/orders')
                 .set('Authorization', `Bearer ${clientAToken}`);
-            expect(res.body[0]).toHaveProperty('status', 'In Progress');
+            expect(res.body[0]).toHaveProperty('status', 'pending');
         });
     });
 
@@ -332,7 +349,7 @@ describe('Orders API Tests', () => {
                 .set('Authorization', `Bearer ${clientAToken}`)
                 .send({ 
                     restaurantId: validRestaurantId1, 
-                    products: [{ productId: validProductId1, productName: "Burger" }] 
+                    products: [{ productId: validProductId1, productName: "Burger", quantity: 1 }] 
                 });
             const tempOrderId = tempOrderRes.body._id;
 
@@ -340,6 +357,40 @@ describe('Orders API Tests', () => {
             const deleteRes = await request(app).delete(`/orders/${tempOrderId}`)
                 .set('Authorization', `Bearer ${clientAToken}`);
             expect(deleteRes.status).toBe(200);
+        });
+    });
+
+    // ==========================================
+    // 6. UPDATE STATUS (PUT /orders/:id/status) - 2 Tests
+    // ==========================================
+    describe('PUT /orders/:id/status', () => {
+        let statusOrderId;
+        
+        beforeAll(async () => {
+            const res = await request(app).post('/orders')
+                .set('Authorization', `Bearer ${clientAToken}`)
+                .send({ 
+                    restaurantId: validRestaurantId1, 
+                    products: [{ productId: validProductId1, productName: "Burger", quantity: 1 }] 
+                });
+            statusOrderId = res.body._id;
+        });
+
+        it('1. [Success] Admin can update order status', async () => {
+            const res = await request(app).put(`/orders/${statusOrderId}/status`)
+                .set('Authorization', `Bearer ${adminToken}`)
+                .send({ status: 'Delivered' });
+            
+            expect(res.status).toBe(200);
+            expect(res.body.status).toBe('Delivered');
+        });
+
+        it('2. [Fail] Return 404 for non-existent order status update', async () => {
+            const res = await request(app).put(`/orders/${nonExistentId}/status`)
+                .set('Authorization', `Bearer ${adminToken}`)
+                .send({ status: 'Delivered' });
+            
+            expect(res.status).toBe(404);
         });
     });
 });

@@ -150,7 +150,7 @@ describe('Products API Tests', () => {
     });
 
     // ==========================================
-    // 3. READ ONE (GET /products/:id) - 6 Tests
+    // 3. READ ONE (GET /products/:id) - 7 Tests
     // ==========================================
     describe('GET /products/:id', () => {
         it('1. [Success] Anyone can fetch a specific product by valid ID', async () => {
@@ -185,6 +185,14 @@ describe('Products API Tests', () => {
             const res = await request(app).get(`/products/${testProductId}?userId=user123`);
             expect(res.status).toBe(200);
             // The mocked TCP client silently accepted the call in the background
+        });
+
+        it('7. [Success] Fetching product with userId succeeds even if TCP fails', async () => {
+            const tcpClient = require('../src/tcpClient');
+            tcpClient.sendCommand.mockRejectedValueOnce(new Error('TCP Server Offline'));
+            const res = await request(app).get(`/products/${testProductId}?userId=user123`);
+            expect(res.status).toBe(200);
+            expect(res.body._id).toBe(testProductId);
         });
     });
 
