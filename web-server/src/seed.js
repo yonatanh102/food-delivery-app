@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const Restaurants = require('./models/restaurants');
 const Products = require('./models/products');
+const Users = require('./models/users');
+const bcrypt = require('bcrypt');
 
 const seedDatabase = async () => {
     try {
@@ -12,6 +14,25 @@ const seedDatabase = async () => {
         await Restaurants.deleteMany({});
         await Products.deleteMany({});
         console.log('Cleared old restaurants and products...');
+
+        await Users.deleteMany({});
+        console.log('Cleared old users...');
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash('admin123', salt);
+
+        const adminUser = {
+            name: 'Admin',
+            email: 'admin@food.com',
+            password: hashedPassword,
+            phone: '1234567890',
+            address: 'Admin Address',
+            location: { lat: 32.0853, lng: 34.7818 },
+            role: 'admin'
+        };
+        
+        await Users.create(adminUser);
+        console.log('Admin user created!');
 
         const restaurants = await Restaurants.insertMany([
             {

@@ -38,7 +38,7 @@ export default function Navbar() {
                         <>
                             {/* for connected users */}
                             <span className='user-badge'>
-                                Hi, {user.role === 'admin' ? 'Admin' : 'User'}
+                                Hi, {user.name}!
                             </span>
 
                             <Link to="/" className='nav-link'>Restaurants</Link>
@@ -49,7 +49,7 @@ export default function Navbar() {
                                 <Link to="/cart" className="nav-link">
                                     🛒 My Cart
                                 </Link>
-                                {itemCount > 0 && <span className="badge-icon">{itemCount}</span>}
+                                ({itemCount > 0 && <span className="badge-icon">{itemCount}</span>})
                             </div>
 
                             {/* admin panel */}

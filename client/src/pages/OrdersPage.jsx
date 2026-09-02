@@ -49,7 +49,7 @@ export default function OrderPage() {
                     <div className="order-header">
                         <div>
                             <p className="order-id">Order ID: {order._id}</p>
-                            <p className="order-date">Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                            <p className="order-date">Date: {new Date(order.orderTime).toLocaleDateString()}</p>
                         </div>
                         <span className={`order-status ${getStatusClass(order.status)}`}>
                             {order.status ? order.status.toUpperCase() : 'PENDING'}
