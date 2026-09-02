@@ -63,7 +63,7 @@ export default function RestaurantPage() {
                                     {product.image ? <img src={product.image} alt={product.name} className="product-thumb-img" /> : '🍽️'}
                                 </div>
                                 <div className="product-details">
-                                    {product.isLimited && <span className="badge-limited">Limited Time</span>}
+                                    {product.limited && <span className="badge-limited">Limited Time</span>}
                                     <h3 className="product-name">{product.name}</h3>
                                     <p className="product-desc">{product.description || 'Fresh & tasty'}</p>
                                     <div className="product-meta">
