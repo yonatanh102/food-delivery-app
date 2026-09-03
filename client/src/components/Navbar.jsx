@@ -49,7 +49,7 @@ export default function Navbar() {
                                 <Link to="/cart" className="nav-link">
                                     🛒 My Cart
                                 </Link>
-                                ({itemCount > 0 && <span className="badge-icon">{itemCount}</span>})
+                                {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
                             </div>
 
                             {/* admin panel */}

@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const seedDatabase = require('./seed');
 
 const recommendationRoutes = require('./routes/recommendations');
 const interactionRoutes = require('./routes/interactions');
@@ -26,7 +27,10 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/food_deliv
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV.trim() !== 'test') {
   mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    await seedDatabase();
+  })
   .catch(err => console.error('Could not connect to MongoDB', err));
 
   const PORT = process.env.PORT || 3000;

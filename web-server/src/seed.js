@@ -3,20 +3,17 @@ const mongoose = require('mongoose');
 const Restaurants = require('./models/restaurants');
 const Products = require('./models/products');
 const Users = require('./models/users');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const seedDatabase = async () => {
     try {
-        const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/food_delivery_db';
-        await mongoose.connect(MONGO_URI);
-        console.log('Connected to MongoDB...');
+        const count = await Restaurants.countDocuments();
+        if (count > 0) {
+            console.log('Database already has data. Skipping seed...');
+            return;
+        }
 
-        await Restaurants.deleteMany({});
-        await Products.deleteMany({});
-        console.log('Cleared old restaurants and products...');
-
-        await Users.deleteMany({});
-        console.log('Cleared old users...');
+        console.log('Database is empty. Seeding...');
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash('admin123', salt);
@@ -191,12 +188,10 @@ const seedDatabase = async () => {
         ]);
         console.log(`Created ${products.length} Products!`);
         console.log('✅ Database seeded successfully!');
-        process.exit();
 
     } catch (err) {
         console.error('❌ Error seeding database:', err);
-        process.exit(1);
     }
 };
 
-seedDatabase();
+module.exports = seedDatabase;
