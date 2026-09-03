@@ -14,6 +14,7 @@ const validUserData = {
     email: "john@example.com",
     password: "password123",
     address: "123 Test St",
+    location: { lat: 31.25, lng: 35.21 },
     phone: "050-1234567"
 };
 

@@ -26,7 +26,7 @@ describe('Recommendations API Tests', () => {
     });
 
     // ==========================================
-    // 1. READ (GET /recommendations) - 7 Tests
+    // 1. READ (GET /recommendations) - 8 Tests
     // ==========================================
     describe('GET /recommendations', () => {
         
@@ -89,6 +89,43 @@ describe('Recommendations API Tests', () => {
             
             const lastCallArgs = tcpClient.sendCommand.mock.calls[0][0];
             expect(lastCallArgs).toMatch(/^RECOMMEND [a-zA-Z0-9_]+ [a-zA-Z0-9_]+$/);
+        });
+
+        it('8. [Fail] Returns 400 if TCP server returns a 400/404 string', async () => {
+            tcpClient.sendCommand.mockResolvedValueOnce('404 Not Found: User has no history');
+
+            const res = await request(app).get(`/recommendations?itemId=${testItemId}`)
+                .set('Authorization', `Bearer ${clientToken}`);
+            
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe('error');
+            expect(res.body.message).toMatch(/404/);
+        });
+    });
+
+    // ==========================================
+    // 2. WRITE (POST /recommendations/cart) - 2 Tests
+    // ==========================================
+    describe('POST /recommendations/cart', () => {
+        it('1. [Success] Should return empty array if cart is empty', async () => {
+            const res = await request(app).post('/recommendations/cart')
+                .set('Authorization', `Bearer ${clientToken}`)
+                .send({ productIds: [] });
+            
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual([]);
+            expect(tcpClient.sendCommand).not.toHaveBeenCalled();
+        });
+
+        it('2. [Fail] Should handle database cast errors gracefully if Regex fails', async () => {
+            tcpClient.sendCommand.mockResolvedValueOnce('200 OK No Items Here');
+
+            const res = await request(app).post('/recommendations/cart')
+                .set('Authorization', `Bearer ${clientToken}`)
+                .send({ productIds: [testItemId] });
+            
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual([]);
         });
     });
 });

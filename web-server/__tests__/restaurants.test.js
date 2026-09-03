@@ -37,8 +37,8 @@ describe('Restaurants API Tests', () => {
                 .send({
                     name: "Test Burger",
                     location: { lat: 32.0853, lng: 34.7818 },
-                    description: "Best burgers",
-                    type: "Fast Food"
+                    address: "123 Burger St",
+                    description: "Best burgers"
                 });
             expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('_id');
@@ -91,7 +91,7 @@ describe('Restaurants API Tests', () => {
         it('8. [Success] Create restaurant with minimum required fields only', async () => {
             const res = await request(app).post('/restaurants')
                 .set('Authorization', `Bearer ${adminToken}`)
-                .send({ name: "Min Req", location: { lat: 10, lng: 20 } });
+                .send({ name: "Min Req", location: { lat: 10, lng: 20 }, address: "Min Req St" });
             expect(res.status).toBe(201);
             expect(res.body).not.toHaveProperty('description'); // Not sent, so it shouldn't exist
         });
@@ -207,10 +207,10 @@ describe('Restaurants API Tests', () => {
         it('6. [Success] Update multiple fields at once', async () => {
             const res = await request(app).put(`/restaurants/${testRestaurantId}`)
                 .set('Authorization', `Bearer ${adminToken}`)
-                .send({ description: "New Desc", type: "Vegan" });
+                .send({ description: "New Desc", address: "New Address" });
             expect(res.status).toBe(200);
             expect(res.body.description).toBe("New Desc");
-            expect(res.body.type).toBe("Vegan");
+            expect(res.body.address).toBe("New Address");
         });
 
         it('7. [Fail] Try to nullify a required field (validation error)', async () => {
@@ -277,13 +277,47 @@ describe('Restaurants API Tests', () => {
             // Create a new restaurant
             const createRes = await request(app).post('/restaurants')
                 .set('Authorization', `Bearer ${adminToken}`)
-                .send({ name: "Temp", location: { lat: 1, lng: 1 } });
+                .send({ name: "Temp", location: { lat: 1, lng: 1 }, address: "Temp Address" });
             const tempId = createRes.body._id;
 
             // Delete it
             const deleteRes = await request(app).delete(`/restaurants/${tempId}`)
                 .set('Authorization', `Bearer ${adminToken}`);
             expect(deleteRes.status).toBe(200);
+        });
+    });
+
+    // ==========================================
+    // 6. SEARCH (GET /restaurants/search) - 3 Tests
+    // ==========================================
+    describe('GET /restaurants/search', () => {
+        
+        beforeAll(async () => {
+            await request(app).post('/restaurants')
+                .set('Authorization', `Bearer ${adminToken}`)
+                .send({
+                    name: "Searchable Burger",
+                    location: { lat: 32.0, lng: 34.0 },
+                    address: "Search St"
+                });
+        });
+
+        it('1. [Success] Search by existing name returns results', async () => {
+            const res = await request(app).get('/restaurants/search?q=Burger');
+            expect(res.status).toBe(200);
+            expect(res.body.length).toBeGreaterThanOrEqual(1);
+            expect(res.body[0].name).toMatch(/Burger/i);
+        });
+
+        it('2. [Success] Case-insensitive search works', async () => {
+            const res = await request(app).get('/restaurants/search?q=burger');
+            expect(res.status).toBe(200);
+            expect(res.body.length).toBeGreaterThanOrEqual(1);
+        });
+
+        it('3. [Fail] Missing query parameter returns 400', async () => {
+            const res = await request(app).get('/restaurants/search');
+            expect(res.status).toBe(400);
         });
     });
 });

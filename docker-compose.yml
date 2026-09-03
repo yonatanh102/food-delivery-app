@@ -51,5 +51,14 @@ services:
       - TCP_PORT=5000
       - JWT_SECRET=my_super_secret_key_12345
 
+  # Container for the frontend (React)
+  frontend:
+    build: ./client
+    container_name: react_frontend
+    ports:
+      - "80:80" 
+    depends_on:
+      - api
+
 volumes:
   mongo_data:

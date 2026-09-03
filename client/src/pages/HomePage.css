@@ -1,0 +1,95 @@
+.catalog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.page-title.center { text-align: center; }
+
+.empty-message {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.card-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.restaurant-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s ease;
+}
+
+.restaurant-card:hover { transform: translateY(-3px); }
+
+.card-image-placeholder {
+  height: 12rem;
+  background-color: var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.75rem;
+}
+
+.card-image {
+  height: 12rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.card-description {
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  flex: 1;
+}
+
+.card-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-address {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.search-container { 
+  margin-Bottom: 2rem;
+  text-Align: center ;
+}
+
+.search-input {
+  padding: 0.75rem 1.5rem;
+  width: 100%;
+  max-Width: 500px;
+  border-Radius: 9999px;
+  border: 1px solid #d1d5db;
+  font-Size: 1rem;
+  outline: none;
+  box-Shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}

@@ -1,73 +1,63 @@
 # Full-Stack Food Delivery App & Recommendation Engine
 
 ## Overview
-A microservices-based full-stack food delivery application. The system consists of a robust **Node.js/Express REST API** for handling core business logic, user management, and order processing, seamlessly integrated with a high-performance **TCP-based recommendation engine built in C++**. The recommendation system manages user interaction history and provides real-time product recommendations based on collaborative filtering algorithms.
+A complete, microservices-based full-stack food delivery application. The system consists of a dynamic **React Frontend**, a robust **Node.js/Express REST API** for core business logic, and a high-performance **TCP-based recommendation engine built in C++**. The recommendation system manages user interaction history and provides real-time product recommendations based on collaborative filtering algorithms.
 
 ## System Architecture & Tech Stack
 
-### 1. Main Backend (REST API)
-* **Core Stack:** Node.js, Express.js.
-* **Database:** MongoDB with Mongoose ODM for structured data modeling and referential integrity.
+### 1. Frontend (Client)
+* **Core Stack:** React, Context API (Auth & Cart state management).
+* **UI/UX:** Responsive design with Dark/Light mode toggle and interactive cart badges.
+* **Features:** Real-time Geolocation distance calculation (Haversine formula) to sort restaurants by proximity, and seamless integration with the recommendation engine during the checkout process.
+
+### 2. Main Backend (REST API)
+* **Core Stack:** Node.js, Express.js
+* **Database:** MongoDB with Mongoose ODM. Features an **Auto-Seeding** mechanism that intelligently populates the database with realistic restaurants, products, and a default admin user on the first run.
 * **Security:** JWT-based authentication with Role-Based Access Control (RBAC) separating `admin` and `client` privileges.
-* **Features:** Full CRUD capabilities for Users, Restaurants, Products, and Orders with strict data validation.
 
-### 2. Recommendation Engine (Microservice)
-* **Core Language:** C++ (using STL).
-* **Design Patterns:** Object-Oriented design implementing the **Command Pattern** for scalable and maintainable request handling.
+### 3. Recommendation Engine (Microservice)
+* **Core Language:** C++ (using STL)
+* **Design Patterns:** Object-Oriented design implementing the **Command Pattern** for scalable and maintainable request handling
 * **Networking:** Custom synchronous TCP server built from scratch using POSIX sockets (`<sys/socket.h>`).
-* **Storage:** File-based data persistence mapped to in-memory data structures for fast continuous execution.
 
-### 3. DevOps & Testing
+### 4. DevOps & Testing
+* **Deployment:** Fully containerized utilizing Docker Multi-stage builds (Nginx for the frontend) and Docker Compose for seamless local orchestration.
 * **Testing Frameworks:** Jest & Supertest (Node.js), Unittest (Python), and native C++ assertions.
-* **Deployment:** Fully containerized utilizing Docker Multi-stage builds and Docker Compose for seamless local orchestration.
-
----
-
-## Recommendation Algorithm
-The recommendation engine utilizes a memory-based **Collaborative Filtering** approach, focusing on item co-occurrence and user behavior similarity. 
-
-When a `RECOMMEND` request is triggered for a specific user and a target item:
-1. **Audience Matching:** The system scans the database to find all other users who have interacted with the requested target item.
-2. **Item Extraction:** It aggregates all other items that these matched users have viewed or purchased.
-3. **Filtering:** Items that the requesting user has already interacted with are filtered out to ensure only new, relevant suggestions are provided.
-4. **Result:** The system returns the optimal recommended products based on this intersection of behaviors.
 
 ---
 
 ## Internal TCP Communication (C++ Server)
-The C++ server processes text-based commands over TCP. Every command sent by the Node API client must end with a newline character (`\n`). All data modifications are strictly atomic (all-or-nothing).
+The C++ server processes text-based commands over TCP[cite: 28]. Every command sent by the Node API client must end with a newline character (`\n`). All data modifications are strictly atomic (all-or-nothing).
 
 | Command | Arguments | Description | Success Status |
 |---|---|---|---|
 | **`HELP`** | None | Returns a list of all available commands and their syntax. | `200 OK` |
 | **`ADD_VIEW`** | `<user_id> <item_id> [item_id...]` | Records one or more viewed items for a specific user. | `201 Created` |
 | **`ADD_PURCHASE`** | `<user_id> <item_id> [item_id...]` | Records one or more purchased items for a specific user. | `201 Created` |
-| **`REMOVE_VIEW`** | `<user_id> <item_id> [item_id...]` | Atomically removes view records. Reverted if any item does not exist. | `204 No Content` |
-| **`REMOVE_PURCHASE`** | `<user_id> <item_id> [item_id...]` | Atomically removes purchase records. Reverted if any item does not exist. | `204 No Content` |
+| **`REMOVE_VIEW`** | `<user_id> <item_id> [item_id...]` | Atomically removes view records. | `204 No Content` |
+| **`REMOVE_PURCHASE`** | `<user_id> <item_id> [item_id...]` | Atomically removes purchase records. | `204 No Content` |
 | **`RECOMMEND`** | `<user_id> <item_id>` | Generates a list of recommended products based on the target item. | `200 OK` |
-
-*(Note: Invalid commands, missing arguments, or failed atomic operations will return a `400 Bad Request` or `404 Not Found` status).*
 
 ---
 
 ## Automated Testing Suite
 The project boasts a massive and comprehensive testing strategy ensuring total system reliability:
 
-* **API Integration Tests (Node.js):** Over 140 automated tests using Jest and Supertest covering Authentication, Authorization spoofing blocks, CRUD operations, database validation, and mocked TCP integrations.
+* **API Integration Tests (Node.js):** 158 automated tests using Jest and Supertest covering Authentication, Authorization spoofing blocks, CRUD operations, database validation, and robust fault-tolerance testing (handling TCP connection drops gracefully).
 * **C++ Unit Tests:** Testing core logic and data models in an isolated environment.
-* **E2E TCP Tests (Python):** Python Automated Integration Tests evaluating TCP socket validation and algorithmic correctness against the live C++ container.
+* **E2E TCP Tests (Python):** Automated tests evaluating TCP socket validation and algorithmic correctness against the live C++ container.
 
 ---
 
 ## Build & Run Instructions
 
 ### 1. Run the Full Stack System (Recommended)
-Spins up MongoDB, the Node.js API Server, and the C++ Recommendation Engine via Docker Compose.
+Spins up MongoDB, the Node.js API Server, the C++ Recommendation Engine, and the React Frontend (via Nginx) using Docker Compose.
 
-docker-compose up -d
+docker compose up --build -d
 
 ### 2. Run Node.js API Tests
-With MongoDB running, execute the backend test suite sequentially using a dedicated test database:
+With MongoDB running, execute the backend test suite sequentially using a dedicated test database
 
 cd web-server
 npm install
@@ -87,3 +77,10 @@ docker run -it --rm recommendation-tester ./build/run_tests
 * Run Python E2E Integration Tests: Spins up both the C++ TCP Server and a Python test client on a shared Docker network. The client sends a series of network commands to validate protocol adherence and algorithmic correctness.
 
 docker-compose up --build python-tests
+
+### 4. Run Frontend Locally (Development Mode)
+Since Docker serves a production build of the frontend, making UI changes with Hot-Reloading requires running the React development server locally outside of Docker:
+
+cd client
+npm install
+npm run dev

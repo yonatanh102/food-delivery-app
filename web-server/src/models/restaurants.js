@@ -6,9 +6,10 @@ const restaurantSchema = new mongoose.Schema({
     lat: {type: Number, required: true },
     lng: { type: Number, required: true}
   },
+  address: { type: String, required: true },
   description: { type: String },
-  type: { type: String },
-  image: { type: String },
+  logo: { type: String },
+  banner: { type: String }
 });
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

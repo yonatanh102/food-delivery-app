@@ -1,0 +1,140 @@
+.navbar-container {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.navbar-inner {
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-logo:hover {
+  color: #bfdbfe;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.user-badge {
+  font-size: 0.875rem;
+  background-color: var(--primary-hover);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid #60a5fa;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #bfdbfe;
+}
+
+.nav-cart-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-link-admin {
+  text-decoration: none;
+  color: #fde047;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.nav-link-admin:hover {
+  color: #fef08a;
+}
+
+.btn-logout {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.35rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+}
+
+.btn-logout:hover {
+  background-color: #dc2626;
+}
+
+.btn-register {
+  background-color: #ffffff;
+  color: var(--primary-color);
+  padding: 0.35rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.btn-register:hover {
+  background-color: #f3f4f6;
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  width: 2.25rem;
+  height: 2.25rem;
+  line-height: 1;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -14px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

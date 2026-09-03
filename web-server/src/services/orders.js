@@ -1,7 +1,7 @@
 const orderModel = require('../models/orders');
 
-const getOrders = async () => {
-    return await orderModel.find();
+const getOrders = async (userId) => {
+    return await orderModel.find({ userId });
 }
 
 const getOrderById = async (id) => {
@@ -21,10 +21,20 @@ const deleteOrder = async (id) => {
     return await orderModel.findByIdAndDelete(id);
 }
 
+const getAllOrders = async () => {
+    return await orderModel.find().sort({ createdAt: -1});
+}
+
+const updateOrderStatus = async (id, status) => {
+    return await orderModel.findByIdAndUpdate(id, { status }, { returnDocument: 'after', runValidators: true });
+}
+
 module.exports = {
     getOrders,
     getOrderById,
     createOrder,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    getAllOrders,
+    updateOrderStatus
 }

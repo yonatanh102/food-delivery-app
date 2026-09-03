@@ -26,11 +26,14 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        if (req.body.password && req.body.password.length < 6) {
+        // prevent users from creating user with admin role 
+        delete req.body.role;
+
+        const { email, phone, password } = req.body;
+        if (password && password.length < 6) {
             return res.status(500).json({ message: 'password must be at least 6 characters' });
         }
         
-        const { email, phone } = req.body;
         const existingEmail = await userService.getUserByEmail(email);
         const existingPhone = await userService.getUserByPhone(phone);
 
