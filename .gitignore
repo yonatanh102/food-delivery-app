@@ -1,9 +1,43 @@
-# Database files
-data/data.txt
+# --- Node.js & React (Frontend & Backend) ---
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+npm-debug.log*
 
-# VS Code specific files
-.vscode/
+# --- Environment Variables & Secrets ---
+.env
+*.env
+.env.*
 
-# Python cache files
+# --- C++ & CMake Build Artifacts ---
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+recommend_app
+run_tests
+*.o
+*.a
+*.so
+*.out
+*.exe
+
+# --- Python Cache (E2E Tests) ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# --- Persistent Data & OS Files ---
+data/
+*.db
+*.dat
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,4 +1,7 @@
 # Full-Stack Food Delivery App & Recommendation Engine
+![CI Pipeline](https://github.com/<yonatanh102>/<food-delivery-app>/actions/workflows/ci.yml/badge.svg)
+
+# Full-Stack Food Delivery App & Recommendation Engine
 
 ## Overview
 A complete, microservices-based full-stack food delivery application. The system consists of a dynamic **React Frontend**, a robust **Node.js/Express REST API** for core business logic, and a high-performance **TCP-based recommendation engine built in C++**. The recommendation system manages user interaction history and provides real-time product recommendations based on collaborative filtering algorithms.
