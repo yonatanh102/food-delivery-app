@@ -27,7 +27,7 @@ A complete, microservices-based full-stack food delivery application. The system
 ---
 
 ## Internal TCP Communication (C++ Server)
-The C++ server processes text-based commands over TCP[cite: 28]. Every command sent by the Node API client must end with a newline character (`\n`). All data modifications are strictly atomic (all-or-nothing).
+The C++ server processes text-based commands over TCP. Every command sent by the Node API client must end with a newline character (`\n`). All data modifications are strictly atomic (all-or-nothing).
 
 | Command | Arguments | Description | Success Status |
 |---|---|---|---|
@@ -41,7 +41,7 @@ The C++ server processes text-based commands over TCP[cite: 28]. Every command s
 ---
 
 ## Automated Testing Suite
-The project boasts a massive and comprehensive testing strategy ensuring total system reliability:
+The project boasts full testing strategy ensuring total system reliability:
 
 * **API Integration Tests (Node.js):** 158 automated tests using Jest and Supertest covering Authentication, Authorization spoofing blocks, CRUD operations, database validation, and robust fault-tolerance testing (handling TCP connection drops gracefully).
 * **C++ Unit Tests:** Testing core logic and data models in an isolated environment.
